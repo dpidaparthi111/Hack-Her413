@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PennyWise</title>
+    <!-- Link to Google Fonts for Sansita font -->
+    <link href="https://fonts.googleapis.com/css2?family=Sansita:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./../../static/styles.css">
+</head>
+<body>
+    <script>
+        function showPage(pageName) {
+            console.log(`Loading page: ${pageName}`);
+            // Add logic to load or display the page dynamically (if needed)
+        }
+    </script>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h1>PennyWise</h1>
+            <ul>
+                <li><a href="{% url 'homepage' %}" onclick="showPage('homepage')">🏠︎ Home</a></li>
+                <li><a href="{% url 'account' %}" onclick="showPage('account')">👤 Account</a></li>
+                <li><a href="{% url 'transactions' %}" onclick="showPage('finances')">💲Finances</a></li>
+                <li><a href="{% url 'books' %}" onclick="showPage('books')">📘 Books</a></li>
+                <li><a href="{% url 'student_loans' %}" onclick="showPage('student loans')">⚖️ Student Loans</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header Bar -->
+            <header>
+                <h1>PennyWise</h1>
+                <div class="header-buttons">
+                    {% comment %} <button class="home-btn">🏠︎</button>
+                    <a href="/homepage" class="settings-btn">🛠</a> {% endcomment %}
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="content">
+                <div id="home" class="page-content active">
+                    <h2>Welcome to Your PennyWise Dashboard</h2>
+                </div>
+                <div id="account" class="page-content">
+                    <h2>Account Page</h2>
+                </div>
+                <div id="calendar" class="page-content">
+                    <h2>Calendar Page</h2>
+                </div>
+                <div id="incomes" class="page-content">
+                    <h2>Incomes Page</h2>
+                </div>
+                <div id="subscriptions" class="page-content">
+                    <h2>Subscriptions Page</h2>
+                </div>
+                <div id="books" class="page-content">
+                    <h2>Books Page</h2>
+                </div>
+                <div id="currencies" class="page-content">
+                    <h2>Currencies Page</h2>
+                </div>
+            </div>
+
+            <!-- Boxes Layout -->
+            <div class="boxes-layout">
+                <div class="box main-box">
+                    <h2>Recent Activity</h2>
+                    <p>Recent Expenditure: 
+                        {% if latest_expense %}
+                            {{ latest_expense.description }} (Amount: {{ latest_expense.amount }})
+                        {% else %}
+                            No recent expenditure.
+                        {% endif %}
+                    </p>
+                    <p>Recent Income: 
+                        {% if latest_income %}
+                            {{ latest_income.amount }}
+                        {% else %}
+                            No recent income.
+                        {% endif %}
+                    </p>
+                    <p>Amount in Savings: 
+                        {% if latest_savings %}
+                            {{ latest_savings.amount }}
+                        {% else %}
+                            No savings recorded.
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="box main-box">
+                    <h2>Books</h2>
+                    {% if latest_books %}
+                        {% for book in latest_books %}
+                            <p>{{ book.title }} (Cost: {{ book.cost }})</p>
+                        {% endfor %}
+                    {% else %}
+                        <p>No books added yet.</p>
+                    {% endif %}
+                </div>
+                
+            </div>
+
+            <!-- Broke-o-meter -->
+            <div class="broke-o-meter">
+                <h2>Broke-o-Meter</h2>
+                <div class="meter">
+                    <img src="./../../static/broke-o-meter.png" alt="Broke-o-Meter Image" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./../../static/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PennyWise</title>
+    <!-- Link to Google Fonts for Sansita font -->
+    <link href="https://fonts.googleapis.com/css2?family=Sansita:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./../../static/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <script>
+        function showPage(pageName) {
+            console.log(`Loading page: ${pageName}`);
+            // Add logic to load or display the page dynamically (if needed)
+        }
+    </script>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h1>PennyWise</h1>
+            <ul>
+                <li><a href="{% url 'homepage' %}" onclick="showPage('homepage')">🏠︎ Home</a></li>
+                <li><a href="{% url 'account' %}" onclick="showPage('account')">👤 Account</a></li>
+                <li><a href="{% url 'transactions' %}" onclick="showPage('finances')">💲Finances</a></li>
+                <li><a href="{% url 'books' %}" onclick="showPage('books')">📘 Books</a></li>
+                <li><a href="{% url 'student_loans' %}" onclick="showPage('student loans')">⚖️ Student Loans</a></li>
+            </ul>
+        </div>
+    
+            <div id="home" class="page-content active">
+            </div>
+            <div class="main-content">
+                <!-- Header Bar -->
+                <header>
+                    <h1>PennyWise</h1>
+                    <div class="header-buttons">
+                        {% comment %} <button class="home-btn">🏠︎</button>
+                        <a href="/homepage" class="settings-btn">🛠</a> {% endcomment %}
+                    </div>
+                </header>
+                <div class="content">
+                    <div id="home" class="page-content active">
+                        <h2>Your Loans</h2>
+                    </div>
+            <!-- Form container -->
+            <div class="form-container">
+                <h2>Enter Loan Information</h2>
+                <!-- Form to enter loan amount and payments -->
+                <label for="loanAmount">Total Loan Amount:</label>
+                <input type="number" id="loanAmount" placeholder="Enter loan amount" />
+                <button onclick="setLoanAmount()">Set Loan</button>
+                
+                <div id="payment-section" style="display:none;">
+                    <h3>Add Payment</h3>
+                    <label for="paymentAmount">Payment Amount:</label>
+                    <input type="number" id="paymentAmount" placeholder="Enter payment amount" />
+                    <label for="paymentDate">Payment Date:</label>
+                    <input type="date" id="paymentDate" />
+                    <button onclick="addPayment()">Add Payment</button>
+                </div>
+            </div>
+
+            <!-- Chart container -->
+            <canvas id="loanChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+
+    <script>
+        let loanData = [];
+        let paymentData = [];
+        let chart = null;
+
+        // Function to initialize the chart with the loan amount
+        function setLoanAmount() {
+            const loanAmount = document.getElementById("loanAmount").value;
+            if (!loanAmount || loanAmount <= 0) {
+                alert("Please enter a valid loan amount.");
+                return;
+            }
+
+            loanData = [{
+                x: new Date().toLocaleDateString()+1,
+                y: parseFloat(loanAmount)
+            }];
+
+            paymentData = [{
+                x: new Date().toLocaleDateString(),
+                y: 0
+            }];
+
+            // Show the "Add Payment" section
+            document.getElementById("payment-section").style.display = 'block';
+
+            // Initialize the chart
+            createChart();
+            createChart();
+
+            document.getElementById("loanAmount").disabled = true;
+        }
+
+        // Function to add payment data
+        function addPayment() {
+            const paymentAmount = document.getElementById("paymentAmount").value;
+            const paymentDate = document.getElementById("paymentDate").value;
+
+            if (!paymentAmount || !paymentDate || paymentAmount <= 0) {
+                alert("Please enter a valid payment amount and date.");
+                return;
+            }
+
+            const payment = {
+                x: new Date(paymentDate).toLocaleDateString(),
+                y: parseFloat(paymentAmount)
+            };
+
+            paymentData.push(payment);
+            updateChart();
+        }
+
+        // Create the initial chart
+        function createChart() {
+            const ctx = document.getElementById("loanChart").getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Total Loan',
+                        data: loanData,
+                        fill: false,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Payments Made',
+                        data: paymentData,
+                        fill: false,
+                        borderColor: 'rgb(255, 99, 132)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            type: 'category',
+                            beginAtZero: false,
+                            type: 'category',
+                            labels: ['']
+                        },
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update the chart with the new payment data
+        function updateChart() {
+            // Calculate remaining loan
+            let remainingLoan = loanData[0].y;
+            paymentData.forEach(payment => {
+                remainingLoan -= payment.y;
+            });
+
+            // Add a point to the loanData to mark the final loan status
+            loanData.push({
+                x: paymentData[paymentData.length - 1].x,
+                y: remainingLoan
+            });
+
+            chart.update();
+        }
+    </script>
+</body>
+</html>
+

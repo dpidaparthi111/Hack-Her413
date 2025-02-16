@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PennyWise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sansita:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./../../static/styles.css">
+    
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="container">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <h1>PennyWise</h1>
+                <ul>
+                    <li><a href="{% url 'homepage' %}" onclick="showPage('homepage')">🏠︎ Home</a></li>
+                    <li><a href="{% url 'account' %}" onclick="showPage('account')">👤 Account</a></li>
+                    <li><a href="{% url 'transactions' %}" onclick="showPage('finances')">💲Finances</a></li>
+                    <li><a href="{% url 'books' %}" onclick="showPage('books')">📘 Books</a></li>
+                    <li><a href="{% url 'student_loans' %}" onclick="showPage('student loans')">⚖️ Student Loans</a></li>
+                </ul>
+            </div>
+
+        <div class="main-content">
+            <!-- Header Bar -->
+            <header>
+                <h1>PennyWise</h1>
+                <div class="header-buttons">
+                    {% comment %} <a href="../homepage.html" class="home-btn">🏠︎</a>
+                    <a href="../Pages/account.html" class="settings-btn">🛠</a> {% endcomment %}
+                </div>
+            </header>
+
+            <div id="home" class="page-content active">
+                <h2>Add Transaction</h2>
+            </div>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Transaction</button>
+    </form>
+    <br>
+    <a href="{% url 'transactions' %}" class="button">View Transactions</a>
+</body>
+<script src="./../../static/script.js"></script>
+ 
+</html>

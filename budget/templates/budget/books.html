@@ -1,0 +1,109 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PennyWise</title>
+    <!-- Link to Google Fonts for Sansita font -->
+    <link href="https://fonts.googleapis.com/css2?family=Sansita:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./../../static/styles.css">
+</head>
+<body>
+    <script>
+        function showPage(pageName) {
+            console.log(`Loading page: ${pageName}`);
+            // Add logic to load or display the page dynamically (if needed)
+        }
+    </script>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h1>PennyWise</h1>
+            <ul>
+                <li><a href="{% url 'homepage' %}" onclick="showPage('homepage')">🏠︎ Home</a></li>
+                <li><a href="{% url 'account' %}" onclick="showPage('account')">👤 Account</a></li>
+                <li><a href="{% url 'transactions' %}" onclick="showPage('finances')">💲Finances</a></li>
+                <li><a href="{% url 'books' %}" onclick="showPage('books')">📘 Books</a></li>
+                <li><a href="{% url 'student_loans' %}" onclick="showPage('student loans')">⚖️ Student Loans</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header Bar -->
+            <header>
+                <h1>PennyWise</h1>
+                <div class="header-buttons">
+                    {% comment %} <button class="home-btn">🏠︎</button>
+                    <a href="/homepage" class="settings-btn">🛠</a> {% endcomment %}
+                </div>
+            </header>
+
+<h2>Your Books</h2>
+
+<!-- Form to Add a New Book -->
+<form method="POST" action="{% url 'add_book' %}">
+    {% csrf_token %}
+    <input type="text" name="title" placeholder="Book Title" required>
+    <input type="number" name="cost" placeholder="Cost" step="0.01" required>
+    <button type="submit">Add Book</button>
+</form>
+
+<!-- Book List with Edit/Delete Functionality -->
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Cost</th>
+        <th>Actions</th>
+    </tr>
+    {% for book in books %}
+    <tr>
+        <form method="POST" action="{% url 'edit_book' book.id %}">
+            {% csrf_token %}
+            <td><input type="text" name="title" value="{{ book.title }}"></td>
+            <td><input type="text" name="cost" value="{{ book.cost }}"></td>
+            <td><button onclick="editRow(this)">Edit</button>
+                <button onclick="saveRow(this)">Save</button>
+                <button onclick="deleteRow(this)">Delete</button>
+            </td>
+            <script>
+                function editRow(button) {
+            var row = button.parentElement.parentElement;
+            var title = row.cells[0].getElementsByTagName("input")[0];
+            var cost = row.cells[1].getElementsByTagName("input")[0];
+            var actionCell = row.cells[2];
+            
+            // Enable input fields for editing
+            title.disabled = false;
+            cost.disabled = false;
+            actionCell.innerHTML = '<button onclick="editRow(this)">Edit</button> <button onclick="saveRow(this)">Save</button> <button onclick="deleteRow(this)">Delete</button>';
+        }
+
+        function saveRow(button) {
+            var row = button.parentElement.parentElement;
+            var title = row.cells[0].getElementsByTagName("input")[0];
+            var cost = row.cells[1].getElementsByTagName("input")[0];
+            var actionCell = row.cells[2];
+            
+            // Save the entered values and disable input fields
+            row.cells[0].textContent = title.value;
+            row.cells[1].textContent = cost.value;
+            title.disabled = true;
+            cost.disabled = true;
+
+            // Change button text to 'Edit'
+            actionCell.innerHTML = '<button onclick="editRow(this)">Edit</button> <button onclick="saveRow(this)">Save</button> <button onclick="deleteRow(this)">Delete</button>';
+        }
+
+        function deleteRow(button) {
+            var row = button.parentElement.parentElement;
+            row.parentElement.removeChild(row);
+        }
+         </script>   
+        </form>
+    </tr>
+    {% endfor %}
+</table>
+

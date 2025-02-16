@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Your Books</h2>
+
+<!-- Form to Add a New Book -->
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Book</button>
+</form>
+
+<!-- Book List with Edit/Delete Functionality -->
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Cost</th>
+        <th>Actions</th>
+    </tr>
+    {% for book in books %}
+    <tr>
+        <form method="POST" action="{% url 'edit_book' book.id %}">
+            {% csrf_token %}
+            <td><input type="text" name="title" value="{{ book.title }}"></td>
+            <td><input type="text" name="cost" value="{{ book.cost }}"></td>
+            <td>
+                <button type="submit">Save</button>
+                <a href="{% url 'delete_book' book.id %}" onclick="return confirm('Are you sure?');">Delete</a>
+            </td>
+        </form>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

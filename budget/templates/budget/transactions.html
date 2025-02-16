@@ -1,0 +1,94 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PennyWise</title>
+    <!-- Link to Google Fonts for Sansita font -->
+    <link href="https://fonts.googleapis.com/css2?family=Sansita:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./../../static/styles.css">
+</head>
+<body>
+    <script>
+        function showPage(pageName) {
+            console.log(`Loading page: ${pageName}`);
+            // Add logic to load or display the page dynamically (if needed)
+        }
+    </script>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h1>PennyWise</h1>
+            <ul>
+                <li><a href="{% url 'homepage' %}" onclick="showPage('homepage')">🏠︎ Home</a></li>
+                <li><a href="{% url 'account' %}" onclick="showPage('account')">👤 Account</a></li>
+                <li><a href="{% url 'transactions' %}" onclick="showPage('finances')">💲Finances</a></li>
+                <li><a href="{% url 'books' %}" onclick="showPage('books')">📘 Books</a></li>
+                <li><a href="{% url 'student_loans' %}" onclick="showPage('student loans')">⚖️ Student Loans</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header Bar -->
+            <header>
+                <h1>PennyWise</h1>
+                <div class="header-buttons">
+                    {% comment %} <button class="home-btn">🏠︎</button>
+                    <a href="/homepage" class="settings-btn">🛠</a> {% endcomment %}
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="content">
+                <div id="home" class="page-content active">
+                    <h2>Your Transactions</h2>
+                </div>
+
+            <p>
+            
+                <div id="link-filters">
+                    Filter by:
+                    <a href="?type=income">Income</a> |
+                    <a href="?type=expenditure">Expenditure</a> |
+                    <a href="?type=savings">Savings</a> |
+                    <a href="?">All</a>
+                </div>
+                <br>
+            </p>
+            <div id="transactions-container">
+    <form id="transactionForm" method="post" action="{% url 'add_transaction' %}">
+        {% csrf_token %}
+        <table id="transactionsTable" border="1">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody id="transactionsBody">
+                <!-- Static rows from the backend -->
+                {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction.type }}</td>
+                    <td>{{ transaction.amount }}</td>
+                    <td>{{ transaction.description }}</td>
+                    <td>{{ transaction.date }}</td>
+                    
+                    </td>
+                </tr>
+     
+            
+
+    
+       
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <button href="{% url 'add_transaction' %}">Add Transaction</a>
+
