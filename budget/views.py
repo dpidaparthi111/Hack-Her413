@@ -8,19 +8,19 @@ from .models import Transaction,Book,Loan, Payment
 import json
 
 
-def register_view(request):
-    if request.method == "POST":
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)  # Auto-login after registration
-            return redirect("home")  # Redirect to home page
-    else:
-        form = RegisterForm()
+# def register_view(request):
+#     if request.method == "POST":
+#         form = RegisterForm(request.POST)
+#         if form.is_valid():
+#             user = form.save()
+#             login(request, user)  # Auto-login after registration
+#             return redirect("homepage")  # Redirect to home page
+#     else:
+#         form = RegisterForm()
     
-    return render(request, "registration/register.html", {"form": form})
+#     return render(request, "registration/register.html", {"form": form})
 
-@login_required(login_url='/accounts/login/')  # Redirects unauthenticated users
+# @login_required(login_url='/accounts/login/')  # Redirects unauthenticated users
 def home_view(request):
     return render(request, 'budget/homepage.html')  # Load the home template
 

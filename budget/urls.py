@@ -2,12 +2,11 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('register/',views.register_view,name='register'), #registration page
+    #path('login/',views.register_view,name='register'), #registration page
     path('', views.home_view, name='homepage'), # Default home page
 
     #navigation bar views-
     path('account/', views.account_view, name='account'),
-    #path('finances/', views.finances_view, name='finances'),
     path('student_loans/', views.student_loans_view, name='student_loans'),
 
     #finances page views-
